@@ -5,7 +5,7 @@ Version:	0.1.2
 Release:	1
 License:	LGPL v2.1+
 Group:		Development/Tools
-Source0:	http://dl.sourceforge.net/outo/%{name}-%{version}.tar.gz
+Source0:	http://downloads.sourceforge.net/outo/%{name}-%{version}.tar.gz
 # Source0-md5:	75a53d333dca94925f05bee8293a0294
 URL:		http://outo.sourceforge.net/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -24,13 +24,18 @@ OUTO (Outo Unit Tester by Otso) to prosty tester jednostkowy dla C
 %build
 %configure
 %{__make} \
-	AM_CFLAGS="%{rpmcflags} -ansi -Wall -pipe -Wmissing-prototypes"
+	AM_CFLAGS="%{rpmcflags} -ansi -Wall -pipe -Wmissing-prototypes" \
+	exampledir=%{_libdir}/examples
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT
+	DESTDIR=$RPM_BUILD_ROOT \
+	exampledir=%{_libdir}/examples
+
+# don't package compiled examples
+%{__rm} -r $RPM_BUILD_ROOT%{_libdir}/examples
 
 install -d $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 install examples/*.c $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
